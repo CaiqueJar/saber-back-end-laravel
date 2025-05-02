@@ -113,4 +113,15 @@ class RestauranteController extends Controller
 
         return response()->json([], 204);
     }
+
+    public function checkIfEmailExists(Request $request)
+    {
+        $email = $request->input('email');
+
+        if ($this->restaurante->where('email', $email)->exists()) {
+            return response()->json(['exists' => true], 200);
+        }
+
+        return response()->json(['exists' => false], 200);
+    }
 }

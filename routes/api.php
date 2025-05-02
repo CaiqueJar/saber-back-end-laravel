@@ -14,6 +14,7 @@ Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
 Route::resource('/restaurante', RestauranteController::class);
 Route::get('/restaurante/list/deleted', [RestauranteController::class, 'listTrashed']);
 Route::put('/restaurante/{id}/restore', [RestauranteController::class, 'restore']);
+Route::get('/restaurante/check/email-exists', [RestauranteController::class, 'checkIfEmailExists']);
 
 Route::resource('/categoria-produto', CategoriaProdutoController::class);
 
