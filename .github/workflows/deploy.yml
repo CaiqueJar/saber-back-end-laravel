@@ -1,0 +1,34 @@
+name: 🚀 Deploy Laravel to Hostinger via SSH
+
+on:
+  push:
+    branches:
+      - homolog
+
+jobs:
+  deploy:
+    name: 🎉 Deploy to Hostinger
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Checkout latest code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOMOLOG_SSH_KEY }}" > ~/.ssh/CaiqueJar
+          chmod 600 ~/.ssh/CaiqueJar
+          ssh-keyscan -H mediumaquamarine-seahorse-148124.hostingersite.com >> ~/.ssh/known_hosts
+
+      - name: 🚀 Run deployment script on server
+        run: |
+          ssh -i ~/.ssh/CaiqueJar u182216510@mediumaquamarine-seahorse-148124.hostingersite.com << 'EOF'
+            cd /home/u182216510/domains/mediumaquamarine-seahorse-148124.hostingersite.com/public_html
+            git pull origin homolog
+            cp .env.homolog .env
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+          EOF
