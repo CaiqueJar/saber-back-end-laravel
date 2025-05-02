@@ -19,16 +19,16 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.HOMOLOG_SSH_KEY }}" > ~/.ssh/CaiqueJar
           chmod 600 ~/.ssh/CaiqueJar
-          ssh-keyscan -H mediumaquamarine-seahorse-148124.hostingersite.com >> ~/.ssh/known_hosts
+          ssh-keyscan -p 65002 46.202.145.2 >> ~/.ssh/known_hosts
 
       - name: 🚀 Run deployment script on server
         run: |
-          ssh -i ~/.ssh/CaiqueJar u182216510@mediumaquamarine-seahorse-148124.hostingersite.com << 'EOF'
-            cd /home/u182216510/domains/mediumaquamarine-seahorse-148124.hostingersite.com/public_html
-            git pull origin homolog
-            cp .env.homolog .env
-            composer install --no-interaction --prefer-dist --optimize-autoloader
-            php artisan migrate --force
-            php artisan config:cache
-            php artisan route:cache
-          EOF
+            ssh -p 65002 -i ~/.ssh/CaiqueJar u182216510@46.202.145.2 << 'EOF'
+                cd /home/u182216510/domains/mediumaquamarine-seahorse-148124.hostingersite.com/public_html
+                git pull origin homolog
+                cp .env.homolog .env
+                composer install --no-interaction --prefer-dist --optimize-autoloader
+                php artisan migrate --force
+                php artisan config:cache
+                php artisan route:cache
+            EOF
