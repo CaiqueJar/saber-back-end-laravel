@@ -8,10 +8,6 @@ use App\Http\Controllers\CategoriaProdutoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::options('{any}', function (Request $request) {
-    return response()->json([], 200);
-})->where('any', '.*');
-
 Route::post('/autenticar', [AutenticacaoController::class, 'login']);
 
 Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
@@ -19,7 +15,7 @@ Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
 Route::resource('/restaurante', RestauranteController::class);
 Route::get('/restaurante/list/deleted', [RestauranteController::class, 'listTrashed']);
 Route::put('/restaurante/{id}/restore', [RestauranteController::class, 'restore']);
-Route::get('/restaurante/check/email-exists', [RestauranteController::class, 'checkIfEmailExists']);
+Route::post('/restaurante/check/email-exists', [RestauranteController::class, 'checkIfEmailExists']);
 
 Route::resource('/categoria-produto', CategoriaProdutoController::class);
 
