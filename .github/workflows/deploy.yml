@@ -25,6 +25,7 @@ jobs:
         run: |
             ssh -p 65002 -i ~/.ssh/CaiqueJar u182216510@46.202.145.2 << 'EOF'
                 cd /home/u182216510/domains/mediumaquamarine-seahorse-148124.hostingersite.com/public_html
+                ssh-keyscan github.com >> ~/.ssh/known_hosts
                 git pull origin homolog
                 cp .env.homolog .env
                 php composer.phar install --no-interaction --prefer-dist --optimize-autoloader
