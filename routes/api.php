@@ -5,7 +5,12 @@ use App\Http\Controllers\CategoriaRestauranteController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CategoriaProdutoController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::options('{any}', function (Request $request) {
+    return response()->json([], 200);
+})->where('any', '.*');
 
 Route::post('/autenticar', [AutenticacaoController::class, 'login']);
 
