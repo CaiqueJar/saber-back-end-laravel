@@ -27,7 +27,7 @@ jobs:
                 cd /home/u182216510/domains/mediumaquamarine-seahorse-148124.hostingersite.com/public_html
                 git pull origin homolog
                 cp .env.homolog .env
-                composer install --no-interaction --prefer-dist --optimize-autoloader
+                php composer.phar install --no-interaction --prefer-dist --optimize-autoloader
                 php artisan migrate --force
                 php artisan config:cache
                 php artisan route:cache
