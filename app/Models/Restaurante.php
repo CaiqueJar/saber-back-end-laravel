@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Restaurante extends Authenticatable
+class Restaurante extends Authenticatable implements JWTSubject
 {
     use SoftDeletes;
 
@@ -54,5 +55,24 @@ class Restaurante extends Authenticatable
     public function categoriaProdutos(): HasMany
     {
         return $this->hasMany(CategoriaProduto::class, 'restaurante_id', 'id');
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->senha;
     }
 }

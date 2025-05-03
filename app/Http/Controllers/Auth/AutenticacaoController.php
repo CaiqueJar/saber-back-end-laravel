@@ -5,26 +5,58 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AutenticacaoController extends Controller
 {
+
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'senha' => 'required|string|min:8',
+            'email' => 'required|string|email',
+            'password' => 'required|string',
         ]);
+        $credentials = $request->only('email', 'password');
 
-        if (!Auth::attempt(['email' => $request->email, 'password' => $request->senha])) {
-            return response()->json(['error' => 'As credenciais não foram encontradas!'], 500);
+        $token = JWTAuth::attempt($credentials);
+        if (!$token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Não autorizado',
+            ], 401);
         }
 
-        $user = $request->user();
-        $token = $user->createToken('auth-token')->plainTextToken;
+        $user = Auth::user();
 
         return response()->json([
+            'status' => 'success',
             'user' => $user,
-            'token' => $token,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ]);
+
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Deslogado com sucesso',
+        ]);
+    }
+
+    public function refresh()
+    {
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+            'authorization' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
         ]);
     }
 }

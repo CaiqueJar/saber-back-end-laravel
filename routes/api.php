@@ -8,7 +8,7 @@ use App\Http\Controllers\CategoriaProdutoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/autenticar', [AutenticacaoController::class, 'login']);
+Route::post('/restaurante/autenticar', [AutenticacaoController::class, 'login']);
 
 Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
 

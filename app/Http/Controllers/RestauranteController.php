@@ -6,6 +6,9 @@ use App\Http\Requests\RestauranteRequest;
 use App\Models\EnderecoRestaurante;
 use App\Models\Restaurante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RestauranteController extends Controller
 {
@@ -44,7 +47,22 @@ class RestauranteController extends Controller
 
         $data = $request->validated();
 
-        $restaurante = $this->restaurante->create($data);
+        $restaurante = $this->restaurante->create([
+            'nome_completo_login' => $data['nome_completo_login'],
+            'email' => $data['email'],
+            'senha' => Hash::make($data['senha']),
+            'celular' => $data['celular'],
+            'cnpj' => $data['cnpj'],
+            'razao_social' => $data['razao_social'],
+            'nome_loja' => $data['nome_loja'],
+            'telefone_celular' => $data['telefone_celular'],
+            'categoria_id' => $data['categoria_id'],
+            'logo' => $data['logo'] ?? null,
+            'banner' => $data['banner'] ?? null,
+            'descricao' => $data['descricao'] ?? null,
+            'pedido_minimo' => $data['pedido_minimo'] ?? null,
+            'taxa_entrega' => $data['taxa_entrega'] ?? null,
+        ]);
 
         $this->endereco->create([
             'restaurante_id' => $restaurante->id,
@@ -55,6 +73,18 @@ class RestauranteController extends Controller
             'bairro' => $data['bairro'],
             'cidade' => $data['cidade'],
             'estado' => $data['estado'],
+        ]);
+
+        $token = JWTAuth::fromUser($restaurante);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User created successfully',
+            'restaurante' => $restaurante,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
         ]);
 
         return response()->json($restaurante, 201);
