@@ -8,14 +8,26 @@ use App\Http\Controllers\CategoriaProdutoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/restaurante/autenticar', [AutenticacaoController::class, 'login']);
 
 Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
 
-Route::resource('/restaurante', RestauranteController::class);
-Route::get('/restaurante/list/deleted', [RestauranteController::class, 'listTrashed']);
-Route::put('/restaurante/{id}/restore', [RestauranteController::class, 'restore']);
-Route::post('/restaurante/check/email-exists', [RestauranteController::class, 'checkIfEmailExists']);
+/**
+ * ENDPOINTS DO RESTAURANTE
+ */
+Route::prefix('/restaurante')->controller(RestauranteController::class)->group(function () {
+    Route::resource('/', RestauranteController::class);
+    Route::get('/list/deleted', 'listTrashed');
+    Route::put('/{id}/restore', 'restore');
+    Route::post('/check/email-exists', 'checkIfEmailExists');
+});
+
+/**
+ * ENDPOINTS DE AUTENTICAÇÃO
+ */
+Route::prefix('/auth')->controller(AutenticacaoController::class)->group(function () {
+    Route::post('/restaurante/login', 'login');
+    Route::get('/restaurante/sair', 'logout');
+});
 
 Route::resource('/categoria-produto', CategoriaProdutoController::class);
 
