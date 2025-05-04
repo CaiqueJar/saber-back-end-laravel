@@ -62,11 +62,16 @@ class ProdutoController extends Controller
             return response()->json(['error' => 'Categoria de produto com id ' . $data['categoria_id'] . ' não encontrado'], 200);
         }
 
-        $image = $request->file('imagem');
-        if($request->hasFile('imagem')) {
-            $image = time() . '.' . $request->image->getClientOriginalExtension();
-            $request->image->move(public_path('product-images/'), $image);
-            $data['imagem'] = $image;
+        if ($request->hasFile('imagem')) {
+            $image = $request->file('imagem');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            
+            // Store in public directory
+            $path = $image->storeAs('public/product-images', $imageName);
+            
+            $data['imagem'] = asset('storage/product-images/' . $imageName);
+        } else {
+            $data['imagem'] = 'https://cdn.pixabay.com/photo/2022/05/10/10/35/box-7186750_1280.png'; // Default image
         }
 
         return response()->json($this->produto->create($data), 200);
