@@ -25,7 +25,7 @@ class ProdutoRequest extends FormRequest
             'categoria_id' => 'required|integer|exists:categoria_restaurante,id',
             'nome' => 'required|string|max:60',
             'descritivo' => 'nullable|string',
-            'imagem' => 'required|string|max:255',
+            'imagem' => 'required',
             'preco' => 'required|string|between:0,99999999.99',
             'disponibilidade' => 'required|boolean',
             'desconto' => 'nullable|string|between:0,99999999.99',
