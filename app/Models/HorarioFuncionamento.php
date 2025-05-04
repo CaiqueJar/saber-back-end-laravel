@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class HorarioFuncionamento extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     protected $table = 'horarios_funcionamento';
 
@@ -17,6 +17,12 @@ class HorarioFuncionamento extends Model
         'hora_abertura',
         'hora_fechamento',
     ];
+    
+    protected $dates = ['criado_em', 'atualizado_em', 'deletado_em'];
+
+    const CREATED_AT = 'criado_em';
+    const UPDATED_AT = 'atualizado_em';
+    const DELETED_AT = 'deletado_em';
 
     public function restaurante()
     {

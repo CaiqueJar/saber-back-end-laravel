@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AutenticacaoController;
 use App\Http\Controllers\CategoriaRestauranteController;
+use App\Http\Controllers\HorarioFuncionamentoController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CategoriaProdutoController;
@@ -21,8 +22,16 @@ Route::prefix('/restaurante')->controller(RestauranteController::class)->group(f
     Route::post('/check/email-exists', 'checkIfEmailExists');
 });
 
+/**
+ * ENDPOINTS DE HORÁRIO DE FUNCIONAMENTO DO RESTAURANTE
+ */
 
-
+ Route::resource('/horario-funcionamento', HorarioFuncionamentoController::class);
+ Route::prefix('/horario-funcionamento')->controller(HorarioFuncionamentoController::class)->group(function () {
+    Route::get('/list/restaurante/{restauranteId}', 'listByRestaurant');
+    Route::put('/{id}/restore', 'restore');
+ });
+ 
 /**
  * ENDPOINTS DE AUTENTICAÇÃO
  */
@@ -32,7 +41,7 @@ Route::prefix('/auth')->controller(AutenticacaoController::class)->group(functio
 });
 
 /**
- * ENDPOINTS DE CATEGORIA DE RESTAURANTE
+ * ENDPOINTS DE CATEGORIA DE PRODUTO
  */
 Route::resource('/categoria-produto', CategoriaProdutoController::class);
 Route::prefix('/categoria-produto')->controller(CategoriaProdutoController::class)->group(function () {
