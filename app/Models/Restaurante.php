@@ -52,6 +52,11 @@ class Restaurante extends Authenticatable implements JWTSubject
         return $this->hasOne(EnderecoRestaurante::class, 'restaurante_id', 'id');
     }
 
+    public function horarioFuncionamento(): HasMany
+    {
+        return $this->hasMany(HorarioFuncionamento::class, 'restaurante_id', 'id');
+    }
+
     public function categoriaProdutos(): HasMany
     {
         return $this->hasMany(CategoriaProduto::class, 'restaurante_id', 'id');

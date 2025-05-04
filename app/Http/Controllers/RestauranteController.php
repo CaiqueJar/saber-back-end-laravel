@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RestauranteRequest;
+use App\Http\Requests\RestauranteUpdateRequest;
 use App\Models\EnderecoRestaurante;
 use App\Models\Restaurante;
 use Illuminate\Http\Request;
@@ -107,9 +108,33 @@ class RestauranteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(RestauranteUpdateRequest $request, string $id)
     {
-        //
+        $data = $request->validated();
+        
+        $restaurante = $this->restaurante->find($id);
+        if (!$restaurante) {
+            return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 200);
+        }
+
+        $endereco = isset($data['endereco']) ? $data['endereco'] : null;
+        if ($endereco) {
+            unset($data['endereco']);
+
+            $enderecoRestaurante = $this->endereco->where('restaurante_id', $id)->first();
+            if (!$enderecoRestaurante) {
+                return response()->json(['error' => 'Endereço do restaurante não encontrado'], 200);
+            }
+
+            $enderecoRestaurante->update($endereco);
+
+        }
+
+        $restaurante->update($data);
+
+        $restaurante->load('endereco');
+
+        return response()->json($restaurante, 200);
     }
 
     /**

@@ -21,6 +21,8 @@ Route::prefix('/restaurante')->controller(RestauranteController::class)->group(f
     Route::post('/check/email-exists', 'checkIfEmailExists');
 });
 
+
+
 /**
  * ENDPOINTS DE AUTENTICAÇÃO
  */

@@ -22,13 +22,13 @@ class ProdutoUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => 'nullable|string|max:60',
-            'descritivo' => 'nullable|string',
-            'imagem' => 'nullable|string|max:255',
-            'preco' => 'nullable|string|between:0,99999999.99',
-            'disponibilidade' => 'nullable|boolean',
-            'desconto' => 'nullable|string|between:0,99999999.99',
-            'status' => 'nullable|in:disponivel,indisponivel',
+            'nome' => 'string|max:60',
+            'descritivo' => 'string',
+            'imagem' => 'string|max:255',
+            'preco' => 'string|between:0,99999999.99',
+            'disponibilidade' => 'boolean',
+            'desconto' => 'string|between:0,99999999.99',
+            'status' => 'in:disponivel,indisponivel',
         ];
     }
 }
