@@ -31,8 +31,7 @@ class CategoriaProdutoController extends Controller
         if (!$restaurante) {
             return response()->json(['error' => 'Restaurante com id ' . $restauranteId . ' não encontrado'], 404);
         }
-
-        return $this->categoriaProduto->where('restaurante_id', $restauranteId)->get();
+        return $this->categoriaProduto->with('produtos')->where('restaurante_id', $restauranteId)->get();
     }
     
 
