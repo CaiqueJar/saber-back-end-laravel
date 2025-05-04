@@ -29,7 +29,13 @@ Route::prefix('/auth')->controller(AutenticacaoController::class)->group(functio
     Route::get('/restaurante/sair', 'logout');
 });
 
-Route::resource('/categoria-produto', CategoriaProdutoController::class);
+/**
+ * ENDPOINTS DE CATEGORIA DE RESTAURANTE
+ */
+Route::prefix('/categoria-produto')->controller(CategoriaProdutoController::class)->group(function () {
+    Route::resource('/', CategoriaProdutoController::class);
+    Route::get('/list/restaurante/{restauranteId}', 'listByRestaurant');
+});
 
 Route::resource('/produto', ProdutoController::class);
 

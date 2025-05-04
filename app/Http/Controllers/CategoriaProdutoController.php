@@ -25,6 +25,17 @@ class CategoriaProdutoController extends Controller
         return $this->categoriaProduto->all();
     }
 
+    public function listByRestaurant(string $restauranteId)
+    {
+        $restaurante = Restaurante::find($restauranteId);
+        if (!$restaurante) {
+            return response()->json(['error' => 'Restaurante com id ' . $restauranteId . ' não encontrado'], 404);
+        }
+
+        return $this->categoriaProduto->where('restaurante_id', $restauranteId)->get();
+    }
+    
+
     /**
      * Store a newly created resource in storage.
      */
