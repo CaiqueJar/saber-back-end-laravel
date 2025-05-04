@@ -66,7 +66,6 @@ class ProdutoController extends Controller
             $image = $request->file('imagem');
             $imageName = time() . '_' . $image->getClientOriginalName();
             
-            // Store in public directory
             $path = $image->storeAs('public/product-images', $imageName);
             
             $data['imagem'] = asset('storage/product-images/' . $imageName);
@@ -74,6 +73,7 @@ class ProdutoController extends Controller
             $data['imagem'] = 'https://cdn.pixabay.com/photo/2022/05/10/10/35/box-7186750_1280.png'; // Default image
         }
 
+        $data['disponibilidade'] = true;
         return response()->json($this->produto->create($data), 200);
     }
 

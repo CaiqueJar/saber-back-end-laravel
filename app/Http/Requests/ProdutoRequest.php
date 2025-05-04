@@ -27,7 +27,7 @@ class ProdutoRequest extends FormRequest
             'descritivo' => 'nullable|string',
             'imagem' => 'required',
             'preco' => 'required|string|between:0,99999999.99',
-            'disponibilidade' => 'required|boolean',
+            'disponibilidade' => 'boolean',
             'desconto' => 'nullable|string|between:0,99999999.99',
             'status' => 'required|in:disponivel,indisponivel',
         ];
