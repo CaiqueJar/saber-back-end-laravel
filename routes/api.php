@@ -14,8 +14,8 @@ Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
 /**
  * ENDPOINTS DO RESTAURANTE
  */
+Route::resource('/restaurante', RestauranteController::class);
 Route::prefix('/restaurante')->controller(RestauranteController::class)->group(function () {
-    Route::resource('/', RestauranteController::class);
     Route::get('/list/deleted', 'listTrashed');
     Route::put('/{id}/restore', 'restore');
     Route::post('/check/email-exists', 'checkIfEmailExists');
@@ -32,10 +32,19 @@ Route::prefix('/auth')->controller(AutenticacaoController::class)->group(functio
 /**
  * ENDPOINTS DE CATEGORIA DE RESTAURANTE
  */
+Route::resource('/categoria-produto', CategoriaProdutoController::class);
 Route::prefix('/categoria-produto')->controller(CategoriaProdutoController::class)->group(function () {
-    Route::resource('/', CategoriaProdutoController::class);
     Route::get('/list/restaurante/{restauranteId}', 'listByRestaurant');
 });
 
+
+/**
+ * ENDPOINTS DE PRODUTO
+ */
 Route::resource('/produto', ProdutoController::class);
+Route::prefix('/produto')->controller(ProdutoController::class)->group(function () {
+    Route::get('/list/restaurante/{restauranteId}', 'listByRestaurant');
+    Route::get('/list/categoria/{categoriaId}', 'listByCategory');
+    Route::put('/{id}/restore', 'restore');
+});
 
