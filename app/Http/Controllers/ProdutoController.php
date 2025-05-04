@@ -66,7 +66,7 @@ class ProdutoController extends Controller
             $image = $request->file('imagem');
             $imageName = time() . '_' . $image->getClientOriginalName();
             
-            $path = $image->storeAs('public/product-images', $imageName, 'public');
+            $path = $image->storeAs('product-images', $imageName, 'public');
             
             $data['imagem'] = asset('storage/product-images/' . $imageName);
         } else {
