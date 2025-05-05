@@ -120,7 +120,7 @@ class ProdutoController extends Controller
 
         $produto->delete();
 
-        return response()->json(['success' => 'Produto com id ' . $id . ' deletado'], 204);
+        return response()->json(['success' => 'Produto com id ' . $id . ' deletado'], 200);
     }
 
     /**
