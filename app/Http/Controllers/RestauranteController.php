@@ -87,8 +87,6 @@ class RestauranteController extends Controller
                 'type' => 'bearer',
             ]
         ]);
-
-        return response()->json($restaurante, 201);
     }
 
     /**
@@ -116,6 +114,17 @@ class RestauranteController extends Controller
         if (!$restaurante) {
             return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 200);
         }
+
+
+        if ($request->hasFile('logo')) {
+            $image = $request->file('logo');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            
+            $image->storeAs('restaurante', $imageName, 'public');
+            
+            $data['logo'] = asset('storage/product-images/' . $imageName);
+        }
+
 
         $endereco = isset($data['endereco']) ? $data['endereco'] : null;
         if ($endereco) {
