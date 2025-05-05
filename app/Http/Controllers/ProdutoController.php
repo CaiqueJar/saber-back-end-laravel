@@ -66,14 +66,13 @@ class ProdutoController extends Controller
             $image = $request->file('imagem');
             $imageName = time() . '_' . $image->getClientOriginalName();
             
-            $path = $image->storeAs('product-images', $imageName, 'public');
+            $image->storeAs('product-images', $imageName, 'public');
             
             $data['imagem'] = asset('storage/product-images/' . $imageName);
         } else {
-            $data['imagem'] = 'https://cdn.pixabay.com/photo/2022/05/10/10/35/box-7186750_1280.png'; // Default image
+            $data['imagem'] = 'https://cdn.pixabay.com/photo/2022/05/10/10/35/box-7186750_1280.png';
         }
 
-        $data['disponibilidade'] = true;
         return response()->json($this->produto->create($data), 200);
     }
 
@@ -121,7 +120,7 @@ class ProdutoController extends Controller
 
         $produto->delete();
 
-        return response()->json([], 204);
+        return response()->json(['success' => 'Produto com id ' . $id . ' deletado'], 204);
     }
 
     /**
