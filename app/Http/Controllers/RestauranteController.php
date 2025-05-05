@@ -121,7 +121,7 @@ class RestauranteController extends Controller
             $image = $request->file('logo');
             $imageName = time() . '_' . $image->getClientOriginalName();
             
-            $image->storeAs('restaurante', $imageName, 'public');
+            $image->storeAs('restaurante/logo', $imageName, 'public');
             
             $data['logo'] = asset('storage/restaurante/logo/' . $imageName);
         }
@@ -130,7 +130,7 @@ class RestauranteController extends Controller
             $image = $request->file('banner');
             $imageName = time() . '_' . $image->getClientOriginalName();
             
-            $image->storeAs('restaurante', $imageName, 'public');
+            $image->storeAs('restaurante/banner', $imageName, 'public');
             
             $data['banner'] = asset('storage/restaurante/banner/' . $imageName);
         }
