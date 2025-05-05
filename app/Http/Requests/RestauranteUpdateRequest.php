@@ -27,6 +27,8 @@ class RestauranteUpdateRequest extends FormRequest
             'categoria_id' => 'exists:categoria_restaurante,id',
             'pedido_minimo' => 'numeric|min:0',
             'taxa_entrega' => 'numeric|min:0',
+            'logo' => 'nullable',
+            'banner' => 'nullable',
             'endereco' => 'array',
             'endereco.cep' => 'size:8',
             'endereco.logradouro' => 'string|max:150',

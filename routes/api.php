@@ -15,7 +15,7 @@ Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
 /**
  * ENDPOINTS DO RESTAURANTE
  */
-Route::resource('/restaurante', RestauranteController::class);
+Route::resource('/restaurante', RestauranteController::class)->except(['create', 'edit']);
 Route::prefix('/restaurante')->controller(RestauranteController::class)->group(function () {
     Route::get('/list/deleted', 'listTrashed');
     Route::put('/{id}/restore', 'restore');

@@ -111,18 +111,28 @@ class RestauranteController extends Controller
         $data = $request->validated();
         
         $restaurante = $this->restaurante->find($id);
+        $restaurante->update($data);
+
         if (!$restaurante) {
             return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 200);
         }
-
-
+        
         if ($request->hasFile('logo')) {
             $image = $request->file('logo');
             $imageName = time() . '_' . $image->getClientOriginalName();
             
             $image->storeAs('restaurante', $imageName, 'public');
             
-            $data['logo'] = asset('storage/product-images/' . $imageName);
+            $data['logo'] = asset('storage/restaurante/logo/' . $imageName);
+        }
+
+        if ($request->hasFile('banner')) {
+            $image = $request->file('banner');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            
+            $image->storeAs('restaurante', $imageName, 'public');
+            
+            $data['banner'] = asset('storage/restaurante/banner/' . $imageName);
         }
 
 
