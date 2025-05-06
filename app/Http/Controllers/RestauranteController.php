@@ -31,6 +31,17 @@ class RestauranteController extends Controller
         return $this->restaurante->all();
     }
 
+    public function getEndereco(string $id)
+    {
+        $restaurante = $this->restaurante->with('endereco')->find($id);
+
+        if (!$restaurante) {
+            return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 404);
+        }
+
+        return response()->json($restaurante->endereco, 200);
+    }
+
     /**
      * Display a listing of the trashed resource.
      */
