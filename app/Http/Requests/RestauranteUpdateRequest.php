@@ -29,6 +29,7 @@ class RestauranteUpdateRequest extends FormRequest
             'taxa_entrega' => 'numeric|min:0',
             'logo' => 'nullable',
             'banner' => 'nullable',
+            'descricao' => 'string|max:2000',
             'endereco' => 'array',
             'endereco.cep' => 'size:8',
             'endereco.logradouro' => 'string|max:150',
