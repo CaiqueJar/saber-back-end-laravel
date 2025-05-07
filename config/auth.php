@@ -45,6 +45,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'restaurante',
         ],
+        'api_usuario' => [
+            'driver' => 'jwt',
+            'provider' => 'usuario',
+        ]
     ],
 
     /*
@@ -68,6 +72,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'usuario' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\Usuario::class)
         ],
 
         'restaurante' => [

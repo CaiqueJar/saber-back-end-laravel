@@ -28,7 +28,7 @@ class RestauranteController extends Controller
      */
     public function index()
     {
-        return $this->restaurante->all();
+        return $this->restaurante->with('categoria')->get();
     }
 
     public function getEndereco(string $id)

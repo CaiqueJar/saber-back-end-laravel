@@ -6,11 +6,19 @@ use App\Http\Controllers\HorarioFuncionamentoController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CategoriaProdutoController;
+use App\Http\Controllers\SacolaController;
+use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
+
+Route::post('/usuario/enviar-email', [UsuarioController::class, 'enviarEmail']);
+Route::post('/usuario/verificar-codigo', [UsuarioController::class, 'validarCodigo']);
+
+Route::post('/sacola/itens', [SacolaController::class, 'pegarSacola']);
+Route::post('/sacola/adicionar-item', [SacolaController::class, 'adicionarItem']);
 
 /**
  * ENDPOINTS DO RESTAURANTE
