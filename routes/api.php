@@ -14,8 +14,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
 
-Route::post('/usuario/enviar-email', [UsuarioController::class, 'enviarEmail']);
-Route::post('/usuario/verificar-codigo', [UsuarioController::class, 'validarCodigo']);
+/**
+ * ENDPOINTS DO USUÁRIO
+ */
+Route::prefix('/usuario')
+    ->controller(UsuarioController::class)
+    ->group(function() {
+        Route::post('/enviar-email', 'enviarEmail');
+        Route::post('/verificar-codigo', 'validarCodigo');
+        Route::post('/', 'cadastrar');
+        Route::post('/endereco', 'cadastrarEndereco');
+    });
 
 Route::post('/sacola/itens', [SacolaController::class, 'pegarSacola']);
 Route::post('/sacola/adicionar-item', [SacolaController::class, 'adicionarItem']);

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CodigoOtp extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     protected $table = 'codigo_otp';
 

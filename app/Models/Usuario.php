@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +17,7 @@ class Usuario extends Authenticatable implements JWTSubject
         'id',
         'nome_completo',
         'email',
-        'senha_hash',
+        'senha',
         'cpf' ,
         'telefone_celular',
         'criado_em',
@@ -47,5 +48,10 @@ class Usuario extends Authenticatable implements JWTSubject
     public function getAuthPassword()
     {
         return $this->senha_hash;
+    }
+
+    public function enderecos(): HasMany
+    {
+        return $this->hasMany(EnderecoUsuario::class, 'usuario_id', 'id');
     }
 }
