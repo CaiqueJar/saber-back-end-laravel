@@ -26,8 +26,17 @@ Route::prefix('/usuario')
         Route::post('/endereco', 'cadastrarEndereco');
     });
 
-Route::post('/sacola/itens', [SacolaController::class, 'pegarSacola']);
-Route::post('/sacola/adicionar-item', [SacolaController::class, 'adicionarItem']);
+/**
+ * ENDPOINTS DA SACOLA
+ */
+Route::prefix('/sacola')
+    ->controller(SacolaController::class)
+    ->group(function () {
+        Route::post('/adicionar-item','adicionarItem');
+        Route::delete('/remover-item','removerItem');
+        Route::post('/itens', 'pegarSacola');
+        Route::post('/alterar-quantidade-item', 'alterarQuantidadeItem');
+    });
 
 /**
  * ENDPOINTS DO RESTAURANTE

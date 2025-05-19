@@ -11,11 +11,9 @@ class SacolaController extends Controller
 {
     public function pegarSacola(Request $request)
     {
-        $restauranteId = $request->input('restaurante_id');
         $usuarioId = $request->input('usuario_id');
 
-        $sacola = Sacola::with('itens.produto')
-            ->where('restaurante_id', $restauranteId)
+        $sacola = Sacola::with(['itens.produto', 'restaurante'])
             ->where('usuario_id', $usuarioId)
             ->first();
 
@@ -58,6 +56,70 @@ class SacolaController extends Controller
         ]);
 
         $sacola->load(['itens']);
+
+        return response()->json($sacola, 200);
+    }
+
+    public function removerItem(Request $request)
+    {
+        $restauranteId = $request->input('restaurante_id');
+        $usuarioId = $request->input('usuario_id');
+        $itemId = $request->input('item_id');
+
+        $sacola = Sacola::where('restaurante_id', $restauranteId)
+            ->where('usuario_id', $usuarioId)
+            ->first();
+
+        if(!$sacola) {
+            return response()->json(['error' => 'Sacola não encontrado!', 200]);
+        }
+
+        $item = SacolaItem::where('sacola_id', $sacola->id)
+            ->where('id', $itemId)
+            ->first();
+        
+        if(!$item) {
+            return response()->json(['error' => 'Produto não encontrado!', 200]);
+        }
+
+        $item->delete();
+
+        $sacola->load(['itens.produto']);
+
+        if($sacola->itens->count() == 0) {
+            $sacola->delete();
+            return response()->json([], 200);
+        }
+
+        return response()->json($sacola, 200);
+    }
+
+    public function alterarQuantidadeItem(Request $request)
+    {
+        $restauranteId = $request->input('restaurante_id');
+        $usuarioId = $request->input('usuario_id');
+        $itemId = $request->input('item_id');
+        $quantia = $request->input('quantia');
+
+        $sacola = Sacola::where('restaurante_id', $restauranteId)
+            ->where('usuario_id', $usuarioId)
+            ->first();
+
+        if(!$sacola) {
+            return response()->json(['error' => 'Sacola não encontrado!', 200]);
+        }
+
+        $item = SacolaItem::where('sacola_id', $sacola->id)
+            ->where('id', $itemId)
+            ->first();
+        
+        if(!$item) {
+            return response()->json(['error' => 'Produto não encontrado!', 200]);
+        }
+
+        $item->increment('quantidade', $quantia);
+
+        $sacola->load(['itens.produto']);
 
         return response()->json($sacola, 200);
     }
