@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UsuarioEnderecoRequest;
 use App\Http\Requests\UsuarioRequest;
+use App\Http\Requests\UsuarioUpdateRequest;
 use App\Mail\CodigoOTPMail;
 use App\Mail\UsuarioCadastradoMail;
 use App\Models\CodigoOtp;
@@ -130,5 +131,28 @@ class UsuarioController extends Controller
         EnderecoUsuario::create($data);
 
         return response()->json(['success' => 'Endereço cadastrado com sucesso!']);
+    }
+
+    public function atualizar(UsuarioUpdateRequest $request)
+    {
+        $data = $request->validated();
+
+        $usuario = Usuario::find($data['usuario_id']);
+
+        if(!$usuario) {
+            return response()->json(['error' => 'Usuário não encontrado']);
+        }
+
+        if($data['senha'] != null && $data['senha'] != '') {
+            $usuario->update([
+                'senha' => Hash::make($data['senha'])
+            ]);
+            unset($data['senha']);
+        } 
+
+        $usuario->update($data);
+        
+
+        return response()->json($usuario, 200);
     }
 }
