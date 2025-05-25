@@ -17,7 +17,7 @@ class CategoriaRestauranteController extends Controller
     public function list(int $limit = 0)
     {
         if ($limit > 0) {
-            return $this->categoriaRestaurante->limit($limit);
+            return $this->categoriaRestaurante->limit($limit)->get();
         }
 
         return $this->categoriaRestaurante->all();
