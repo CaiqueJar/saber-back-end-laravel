@@ -14,8 +14,13 @@ class CategoriaRestauranteController extends Controller
         $this->categoriaRestaurante = $categoriaRestaurante;
     }
 
-    public function list()
+    public function list(string $limit = '')
     {
+        if ($limit) {
+            return $this->categoriaRestaurante->limit($limit);
+        }
+
         return $this->categoriaRestaurante->all();
+
     }
 }

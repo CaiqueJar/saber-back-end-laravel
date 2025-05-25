@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/categorias', [CategoriaRestauranteController::class, 'list']);
+Route::get('/categorias/{?limit}', [CategoriaRestauranteController::class, 'list']);
 
 /**
  * ENDPOINTS DO USUÁRIO
