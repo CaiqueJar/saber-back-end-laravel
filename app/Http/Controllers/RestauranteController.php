@@ -119,7 +119,7 @@ class RestauranteController extends Controller
      */
     public function show(string $id)
     {
-        $restaurante = $this->restaurante->with(['categoria', 'endereco'])->find($id);
+        $restaurante = $this->restaurante->with(['categoria', 'endereco', 'categoriaProdutos.produtos'])->find($id);
 
         if (!$restaurante) {
             return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 404);
