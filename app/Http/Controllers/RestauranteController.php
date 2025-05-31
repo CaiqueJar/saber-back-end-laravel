@@ -50,6 +50,17 @@ class RestauranteController extends Controller
         return $this->restaurante->onlyTrashed()->get();
     }
 
+    /**
+     * Display a search of resources.
+     */
+    public function search(Request $request)
+    {
+        $search = $request->input('pesquisa');
+
+        $restaurantes = $this->restaurante->where('nome_loja', 'LIKE', "%{$search}%")->get();
+        return response()->json($restaurantes);
+    }
+
 
     /**
      * Store a newly created resource in storage.

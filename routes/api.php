@@ -46,8 +46,10 @@ Route::prefix('/sacola')
  */
 Route::resource('/restaurante', RestauranteController::class)->except(['create', 'edit']);
 Route::prefix('/restaurante')->controller(RestauranteController::class)->group(function () {
-    Route::get('/{id}/endereco', 'getEndereco');
     Route::get('/list/deleted', 'listTrashed');
+    Route::post('/pesquisa', 'search');
+
+    Route::get('/{id}/endereco', 'getEndereco');
     Route::put('/{id}/restore', 'restore');
     Route::post('/check/email-exists', 'checkIfEmailExists');
 });
