@@ -57,7 +57,10 @@ class RestauranteController extends Controller
     {
         $search = $request->input('pesquisa');
 
-        $restaurantes = $this->restaurante->where('nome_loja', 'LIKE', "%{$search}%")->get();
+        $restaurantes = $this->restaurante->with('categoria')
+            ->where('nome_loja', 'LIKE', "%{$search}%")
+            ->get();
+            
         return response()->json($restaurantes);
     }
 
