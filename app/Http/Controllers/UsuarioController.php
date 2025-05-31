@@ -193,4 +193,10 @@ class UsuarioController extends Controller
 
         return response()->json($usuario, 200);
     }
+
+    public function enderecos(string $id)
+    {
+        $enderecos = EnderecoUsuario::where('usuario_id', $id)->get();
+        return response()->json($enderecos);
+    }
 }

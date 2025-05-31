@@ -26,6 +26,7 @@ Route::prefix('/usuario')
 
         Route::post('/', 'cadastrar');
         Route::post('/endereco', 'cadastrarEndereco');
+        Route::get('/{id}/enderecos', 'enderecos');
         Route::put('/atualizar', 'atualizar');
     });
 

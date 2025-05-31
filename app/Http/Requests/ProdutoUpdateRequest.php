@@ -23,7 +23,7 @@ class ProdutoUpdateRequest extends FormRequest
     {
         return [
             'nome' => 'string|max:60',
-            'descritivo' => 'string',
+            'descritivo' => 'required|string',
             'imagem' => 'string|max:255',
             'preco' => 'string|between:0,99999999.99',
             'disponibilidade' => 'boolean',
