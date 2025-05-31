@@ -24,9 +24,8 @@ class UsuarioRequest extends FormRequest
         return [
             'nome_completo' => 'required|string|max:150',
             'email' => 'required|email',
-            'senha' => 'required|min:6',
             'cpf' => 'nullable|size:11',
-            'telefone_celular' => 'required|min:10|max:11',
+            'telefone_celular' => 'nullable|min:10|max:11',
         ];
     }
 }

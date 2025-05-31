@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AutenticacaoController extends Controller
@@ -58,5 +61,34 @@ class AutenticacaoController extends Controller
                 'type' => 'bearer',
             ]
         ]);
+    }
+
+    public function socialiteRedirect($social)
+    {
+        return Socialite::driver($social)->stateless()->redirect();
+    }
+
+    public function socialiteCallback(Request $request, $social)
+    {
+        $facebookUser = Socialite::driver($social)->stateless()->user();
+
+        $user = Usuario::where('email', $facebookUser->email)->first();
+
+        if(!$user) {
+            $user = Usuario::updateOrCreate(
+                ['facebook_id' => $facebookUser->id],
+                [
+                    'facebook_id' => $facebookUser->id,
+                    'nome_completo' => $facebookUser->name,
+                    'email' => $facebookUser->email,
+                ]
+            );
+        }
+
+
+        $token = Auth::guard('api_usuario')->login($user);
+        $user->update(['token' => $token]);
+
+        return redirect("https://localhost:3000/restaurantes?token={$token}");
     }
 }

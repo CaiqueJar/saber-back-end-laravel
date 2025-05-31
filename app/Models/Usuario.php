@@ -15,9 +15,10 @@ class Usuario extends Authenticatable implements JWTSubject
 
     protected $fillable = [
         'id',
+        'facebook_id',
+        'token',
         'nome_completo',
         'email',
-        'senha',
         'cpf' ,
         'telefone_celular',
         'criado_em',
@@ -39,15 +40,6 @@ class Usuario extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
-    /**
-     * Get the password for the user.
-     *
-     * @return string
-     */
-    public function getAuthPassword()
-    {
-        return $this->senha_hash;
     }
 
     public function enderecos(): HasMany

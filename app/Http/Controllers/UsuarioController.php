@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UsuarioController extends Controller
 {
@@ -22,6 +23,42 @@ class UsuarioController extends Controller
     public function __construct(CodigoOtp $codigoOtp)
     {
         $this->codigoOtp = $codigoOtp;
+    }
+
+    public function pegarToken(Request $request)
+    {
+        $header = $request->header('Authorization');
+        if (! $header || ! Str::startsWith($header, 'Bearer ')) {
+            return response()->json([
+                'message' => 'Token de autorização não foi fornecido'
+            ], 401);
+        }
+
+        $token = substr($header, 7);
+
+        $user = Usuario::where('token', $token)->first();
+
+        if (! $user) {
+            return response()->json([
+                'message' => 'Usuário não encontrado para esse token'
+            ], 404);
+        }
+
+        return response()->json($user);
+    }
+
+    public function logout(string $token)
+    {
+        $usuario = Usuario::where('token', $token)->first();
+        if(!$usuario) {
+            return response()->json([
+                'message' => 'Usuário não encontrado para esse token'
+            ], status: 404);
+        }
+
+        $usuario->update(['token' => null]);
+
+        return response()->json(['success' => 'Usuário fez logout']);
     }
 
     public function enviarEmail(Request $request)
@@ -78,6 +115,7 @@ class UsuarioController extends Controller
         }
 
         $token = Auth::guard('api_usuario')->login($usuario);
+        $usuario->update(['token' => $token]);
         
         $codigoOtp->delete();
 
@@ -95,8 +133,6 @@ class UsuarioController extends Controller
     {
         $data = $request->validated();
 
-        $data['senha'] = Hash::make($data['senha']);
-
         $usuario = Usuario::create($data);
 
         $token = Auth::guard('api_usuario')->login($usuario);
@@ -108,6 +144,8 @@ class UsuarioController extends Controller
             return response()->json(['error' => $e->getMessage()], 200);
         }
         
+        $usuario->update(['token' => $token]);
+
         return response()->json([
             'status' => 'success',
             'user' => $usuario,

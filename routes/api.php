@@ -8,9 +8,7 @@ use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CategoriaProdutoController;
 use App\Http\Controllers\SacolaController;
 use App\Http\Controllers\UsuarioController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/categorias/{limit?}', [CategoriaRestauranteController::class, 'list']);
 
@@ -20,8 +18,12 @@ Route::get('/categorias/{limit?}', [CategoriaRestauranteController::class, 'list
 Route::prefix('/usuario')
     ->controller(UsuarioController::class)
     ->group(function() {
+        Route::get('/pegar-token', 'pegarToken');
+        Route::get('/{token}/logout', 'logout');
+
         Route::post('/enviar-email', 'enviarEmail');
         Route::post('/verificar-codigo', 'validarCodigo');
+
         Route::post('/', 'cadastrar');
         Route::post('/endereco', 'cadastrarEndereco');
         Route::put('/atualizar', 'atualizar');
@@ -66,6 +68,9 @@ Route::prefix('/restaurante')->controller(RestauranteController::class)->group(f
 Route::prefix('/auth')->controller(AutenticacaoController::class)->group(function () {
     Route::post('/restaurante/login', 'login');
     Route::get('/restaurante/sair', 'logout');
+
+    Route::get('redirect/{social}', 'socialiteRedirect');
+    Route::get('callback/{social}', 'socialiteCallback');
 });
 
 /**
