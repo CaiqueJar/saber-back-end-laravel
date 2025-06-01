@@ -25,8 +25,12 @@ Route::prefix('/usuario')
         Route::post('/verificar-codigo', 'validarCodigo');
 
         Route::post('/', 'cadastrar');
+
         Route::post('/endereco', 'cadastrarEndereco');
         Route::get('/{id}/enderecos', 'enderecos');
+        Route::put('/endereco/{id}', 'atualizarEndereco');
+        Route::delete('/endereco/{id}', 'deletarEndereco');
+
         Route::put('/atualizar', 'atualizar');
     });
 

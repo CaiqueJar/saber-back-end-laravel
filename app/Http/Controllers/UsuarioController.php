@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EnderecoUpdateRequest;
 use App\Http\Requests\UsuarioEnderecoRequest;
 use App\Http\Requests\UsuarioRequest;
 use App\Http\Requests\UsuarioUpdateRequest;
@@ -156,21 +157,6 @@ class UsuarioController extends Controller
         ]);
     }
 
-    public function cadastrarEndereco(UsuarioEnderecoRequest $request)
-    {
-        $data = $request->validated();
-
-        $usuario = Usuario::find($data['usuario_id']);
-
-        if(!$usuario) {
-            return response()->json(['error' => 'Usuário não encontrado']);
-        }
-
-        EnderecoUsuario::create($data);
-
-        return response()->json(['success' => 'Endereço cadastrado com sucesso!']);
-    }
-
     public function atualizar(UsuarioUpdateRequest $request)
     {
         $data = $request->validated();
@@ -198,5 +184,44 @@ class UsuarioController extends Controller
     {
         $enderecos = EnderecoUsuario::where('usuario_id', $id)->get();
         return response()->json($enderecos);
+    }
+
+    public function cadastrarEndereco(UsuarioEnderecoRequest $request)
+    {
+        $data = $request->validated();
+
+        $usuario = Usuario::find($data['usuario_id']);
+
+        if(!$usuario) {
+            return response()->json(['error' => 'Usuário não encontrado']);
+        }
+
+        EnderecoUsuario::create($data);
+
+        return response()->json(['success' => 'Endereço cadastrado com sucesso!']);
+    }
+
+    public function atualizarEndereco(EnderecoUpdateRequest $request, string $id)
+    {
+        $data = $request->validated();
+
+        $endereco = EnderecoUsuario::where('usuario_id', $data['usuario_id'])
+            ->find($id);
+
+        $endereco->update($data);
+
+        return response()->json($endereco);
+    }
+
+    public function deletarEndereco(Request $request, string $id)
+    {
+        $usuarioId = $request->usuario_id;
+
+        $endereco = EnderecoUsuario::where('usuario_id', $usuarioId)
+            ->find($id);
+
+        $endereco->delete();
+
+        return response()->json([], 204);
     }
 }
