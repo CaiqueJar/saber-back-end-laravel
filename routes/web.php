@@ -63,4 +63,4 @@ Route::post('/pagar', function(Request $request) {
 
 Route::get('/mp-auth', [MpController::class, 'connectToMercadoPago']);
 Route::get('/mp-return', [MpController::class, 'redirect'])->name('mp.return');
-Route::get('/webhook', [MpController::class, 'webhook'])->name('mp.webhook');
+Route::post('/webhook', [MpController::class, 'webhook'])->name('mp.webhook');

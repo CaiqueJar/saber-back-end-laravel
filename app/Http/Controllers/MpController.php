@@ -24,5 +24,6 @@ class MpController extends Controller
     public function webhook(Request $request)
     {
         info($request->all());
+        return response()->json($request->all());
     }
 }
