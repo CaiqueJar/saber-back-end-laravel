@@ -6,6 +6,7 @@ use App\Http\Controllers\HorarioFuncionamentoController;
 use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CategoriaProdutoController;
+use App\Http\Controllers\MpController;
 use App\Http\Controllers\SacolaController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
@@ -99,3 +100,10 @@ Route::prefix('/produto')->controller(ProdutoController::class)->group(function 
     Route::put('/{id}/restore', 'restore');
 });
 
+
+
+
+/**
+ * MERCADO PAGO
+ */
+Route::post('/webhook', [MpController::class, 'webhook'])->name('mp.webhook');
