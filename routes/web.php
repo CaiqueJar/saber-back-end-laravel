@@ -16,27 +16,45 @@ Route::post('/pagar', function(Request $request) {
     MercadoPagoConfig::setAccessToken("APP_USR-3903069347230855-052508-880e5b48a23caa2dc1e4fadef469578c-387424373");
     
     $data = $request->all();
+
+    $items = [];
+
+    // foreach($this->products as $productItem) {
+        // $product = $productItem['product'];
+
+    $item = [
+        "id" => 2,
+        "title" => 'Comida teste',
+        "description" => 'Testando',
+        // "picture_url" => asset($product->getFirstImage()),
+        "quantity" => 1,
+        "unit_price" => '5.00',
+    ];
+    $items[] = $item;
+    // }
     
     try {
-        $paymentRequest = [
-            "transaction_amount" => (float)$data['transaction_amount'],
+        $request_options = new RequestOptions();
+        $request_options->setCustomHeaders(["X-Idempotency-Key: " . Str::uuid()->toString()]);
+
+        $total = (float) 5;
+        $transaction_amount = str_replace(',', '', number_format(bcmul($total, 1, 2), 2));
+
+        $requestMp = [
             "token" => $data['token'],
-            "description" => $data['description'],
-            "installments" => (int)$data['installments'],
             "payment_method_id" => $data['payment_method_id'],
-            "issuer_id" => $data['issuer_id'],
-            "payer" => [
-                "email" => $data['payer']['email'],
-                "identification" => [
-                    "type" => $data['payer']['identification']['type'],
-                    "number" => $data['payer']['identification']['number']
-                ]
+            "installments" => (int) $data['installments'],
+            "additional_info" => [
+                "items" => $items,
             ],
-            "binary_mode" => true
+            "transaction_amount" => (float) $transaction_amount,
+            "payer" => [
+                "email" => $data['payer']['email']
+            ],
         ];
 
         $client = new \MercadoPago\Client\Payment\PaymentClient();
-        $payment = $client->create($paymentRequest);
+        $payment = $client->create($requestMp, $request_options);
 
         return response()->json([
             'status' => $payment->status,
