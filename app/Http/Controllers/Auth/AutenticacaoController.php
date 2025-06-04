@@ -108,7 +108,7 @@ class AutenticacaoController extends Controller
                 ]
             );
         }
-
+        //teste
 
         $token = Auth::guard('api_usuario')->login($user);
         $user->update(['token' => $token]);
