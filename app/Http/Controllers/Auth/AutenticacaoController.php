@@ -91,4 +91,35 @@ class AutenticacaoController extends Controller
 
         return redirect("https://localhost:3000/restaurantes?token={$token}");
     }
+
+    public function googleSignInMobile(Request $request)
+    {
+        $data = $request->all();
+
+        $user = Usuario::where('email', $data['email'])->first();
+
+        if(!$user) {
+            $user = Usuario::updateOrCreate(
+                ['google_id' => $data['id']],
+                [
+                    'google_id' => $data['id'],
+                    'nome_completo' => $data['name'],
+                    'email' => $data['email'],
+                ]
+            );
+        }
+
+
+        $token = Auth::guard('api_usuario')->login($user);
+        $user->update(['token' => $token]);
+
+        return response()->json([
+            'status' => 'success',
+            'user' => $user,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ]);;
+    }
 }

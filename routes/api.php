@@ -79,6 +79,8 @@ Route::prefix('/auth')->controller(AutenticacaoController::class)->group(functio
 
     Route::get('redirect/{social}', 'socialiteRedirect');
     Route::get('callback/{social}', 'socialiteCallback');
+
+    Route::post('/google-sign-in-mobile', 'googleSignInMobile');
 });
 
 /**
