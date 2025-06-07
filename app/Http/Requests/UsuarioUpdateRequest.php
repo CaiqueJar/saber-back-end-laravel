@@ -26,6 +26,7 @@ class UsuarioUpdateRequest extends FormRequest
             'nome_completo' => 'string|max:150',
             'email' => 'email',
             'cpf' => 'nullable|size:11',
+            'telefone_celular' => 'nullable|min:10|max:11'
         ];
     }
 }
