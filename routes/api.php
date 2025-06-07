@@ -32,7 +32,7 @@ Route::prefix('/usuario')
         Route::put('/endereco/{id}', 'atualizarEndereco');
         Route::delete('/endereco/{id}', 'deletarEndereco');
 
-        Route::put('/atualizar', 'atualizar');
+        Route::post('/atualizar', 'atualizar');
     });
 
 /**

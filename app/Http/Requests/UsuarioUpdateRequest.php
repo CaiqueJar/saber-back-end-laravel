@@ -23,10 +23,9 @@ class UsuarioUpdateRequest extends FormRequest
     {
         return [
             "usuario_id" => 'required',
-            'nome_completo' => 'required|string|max:150',
-            'email' => 'required|email',
-            'senha' => 'nullable|min:6',
-            'cpf' => 'required|size:11',
+            'nome_completo' => 'string|max:150',
+            'email' => 'email',
+            'cpf' => 'nullable|size:11',
         ];
     }
 }

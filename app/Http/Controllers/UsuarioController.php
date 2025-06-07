@@ -160,19 +160,13 @@ class UsuarioController extends Controller
     public function atualizar(UsuarioUpdateRequest $request)
     {
         $data = $request->validated();
+        info(json_encode($data, JSON_PRETTY_PRINT));
 
         $usuario = Usuario::find($data['usuario_id']);
 
         if(!$usuario) {
             return response()->json(['error' => 'Usuário não encontrado']);
         }
-
-        if($data['senha'] != null && $data['senha'] != '') {
-            $usuario->update([
-                'senha' => Hash::make($data['senha'])
-            ]);
-            unset($data['senha']);
-        } 
 
         $usuario->update($data);
         
