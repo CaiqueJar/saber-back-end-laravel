@@ -97,12 +97,22 @@ class ProdutoController extends Controller
     {
         $data = $request->validated();
 
-        
-
         $produto = $this->produto->find($id);
         if (!$produto) {
             return response()->json(['error' => 'Produto com id ' . $id . ' não encontrado'], 200);
         }
+
+        if ($request->hasFile('imagem')) {
+            $image = $request->file('imagem');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            
+            $image->storeAs('product-images', $imageName, 'public');
+            
+            $data['imagem'] = asset('storage/product-images/' . $imageName);
+        } else {
+            $data['imagem'] = 'https://cdn.pixabay.com/photo/2022/05/10/10/35/box-7186750_1280.png';
+        }
+
 
         $produto->update($data);
 
