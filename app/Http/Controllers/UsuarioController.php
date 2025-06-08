@@ -218,4 +218,45 @@ class UsuarioController extends Controller
 
         return response()->json([], 204);
     }
+
+    public function getPedidos(string $id)
+    {
+        $usuario = Usuario::with([
+            'pedidos' => function ($query) {
+                $query->orderBy('criado_em', 'desc');
+            },
+            'pedidos.itens.produto',
+            'pedidos.usuario'
+        ])->find($id);
+
+        if (!$usuario) {
+            return response()->json(['error' => 'Usuário com id ' . $id . ' não encontrado'], 404);
+        }
+
+        return response()->json($usuario->pedidos, 200);
+    }
+
+    public function getPedido(string $id, string $pedidoId)
+    {
+        $usuario = Usuario::with([
+            'endereco',
+            'pedidos' => function ($query) use ($pedidoId) {
+                $query->where('id', $pedidoId);
+            },
+            'pedidos.itens.produto',
+            'pedidos.usuario'
+        ])->find($id);
+
+        if (!$usuario) {
+            return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 404);
+        }
+
+        $pedido = $usuario->pedidos->first();
+
+        if (!$pedido) {
+            return response()->json(['error' => 'Pedido com id ' . $pedidoId . ' não encontrado para este restaurante'], 404);
+        }
+
+        return response()->json($pedido, 200);
+    }
 }

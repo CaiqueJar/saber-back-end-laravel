@@ -47,4 +47,9 @@ class Usuario extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(EnderecoUsuario::class, 'usuario_id', 'id');
     }
+
+    public function pedidos(): HasMany
+    {
+        return $this->hasMany(Pedido::class, 'usuario_id', 'id');
+    }
 }

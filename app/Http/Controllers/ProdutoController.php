@@ -97,6 +97,8 @@ class ProdutoController extends Controller
     {
         $data = $request->validated();
 
+        
+
         $produto = $this->produto->find($id);
         if (!$produto) {
             return response()->json(['error' => 'Produto com id ' . $id . ' não encontrado'], 200);

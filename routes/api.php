@@ -7,6 +7,7 @@ use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CategoriaProdutoController;
 use App\Http\Controllers\MpController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\SacolaController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,10 @@ Route::prefix('/usuario')
         Route::delete('/endereco/{id}', 'deletarEndereco');
 
         Route::post('/atualizar', 'atualizar');
+
+        Route::get('/{id}/pedidos', 'getPedidos');
+        Route::get('/{id}/pedido/{pedidoId}', 'getPedido');
+
     });
 
 /**
@@ -47,6 +52,18 @@ Route::prefix('/sacola')
         Route::post('/alterar-quantidade-item', 'alterarQuantidadeItem');
     });
 
+
+/**
+ * ENDPOINTS DO PEDIDO
+ */
+Route::prefix('/pedido')
+    ->controller(PedidoController::class)
+    ->group(function () {
+        Route::post('/', 'criarPedido');
+        Route::post('/{id}/status', 'atualizarPedido');
+    });
+
+
 /**
  * ENDPOINTS DO RESTAURANTE
  */
@@ -58,6 +75,8 @@ Route::prefix('/restaurante')->controller(RestauranteController::class)->group(f
     Route::get('/{id}/endereco', 'getEndereco');
     Route::put('/{id}/restore', 'restore');
     Route::post('/check/email-exists', 'checkIfEmailExists');
+
+    Route::get('/{id}/pedidos', 'getPedidos');
 });
 
 /**

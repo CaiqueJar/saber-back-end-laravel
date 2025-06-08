@@ -62,6 +62,11 @@ class Restaurante extends Authenticatable implements JWTSubject
         return $this->hasMany(CategoriaProduto::class, 'restaurante_id', 'id');
     }
 
+    public function pedidos(): HasMany
+    {
+        return $this->hasMany(Pedido::class);
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

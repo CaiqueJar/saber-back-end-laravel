@@ -223,4 +223,15 @@ class RestauranteController extends Controller
 
         return response()->json(['exists' => false], 200);
     }
+
+    public function getPedidos(string $id)
+    {
+        $restaurante = $this->restaurante->with(['endereco', 'pedidos.itens.produto', 'pedidos.usuario'])->find($id);
+
+        if (!$restaurante) {
+            return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 404);
+        }
+
+        return response()->json($restaurante->pedidos, 200);
+    }
 }
