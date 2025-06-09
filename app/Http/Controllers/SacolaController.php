@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produto;
+use App\Models\Restaurante;
 use App\Models\Sacola;
 use App\Models\SacolaItem;
 use Illuminate\Http\Request;
@@ -26,6 +27,45 @@ class SacolaController extends Controller
         $usuarioId = $request->input('usuario_id');
         $produtoId = $request->input('produto_id');
 
+        // Primeiro verificar se o restaurante está aberto
+        $diasSemana = [
+            'Sunday'    => 'domingo',
+            'Monday'    => 'segunda',
+            'Tuesday'   => 'terca',
+            'Wednesday' => 'quarta',
+            'Thursday'  => 'quinta',
+            'Friday'    => 'sexta',
+            'Saturday'  => 'sabado'
+        ];
+
+        $diaSemanaIngles = now()->format('l');
+        $diaSemanaAtual = $diasSemana[$diaSemanaIngles] ?? null;
+        $horaAtual = now()->format('H:i:s');
+
+        // Buscar o restaurante com seus horários de funcionamento
+        $restaurante = Restaurante::with('horarioFuncionamento')->find($restauranteId);
+
+        if (!$restaurante) {
+            return response()->json(['error' => 'Restaurante não encontrado!'], 200);
+        }
+
+        $aberto = false;
+        if ($restaurante->horarioFuncionamento) {
+            foreach ($restaurante->horarioFuncionamento as $horario) {
+                if ($horario->dia_semana === $diaSemanaAtual && 
+                    $horario->hora_abertura <= $horaAtual && 
+                    $horario->hora_fechamento >= $horaAtual) {
+                    $aberto = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$aberto) {
+            return response()->json(['error' => 'Restaurante fechado no momento!'], 200);
+        }
+
+        // Continua com o processo se o restaurante estiver aberto
         $produto = Produto::with('categoria')
             ->whereHas('categoria', function ($query) use ($restauranteId) {
                 $query->where('restaurante_id', $restauranteId);
@@ -33,7 +73,7 @@ class SacolaController extends Controller
             ->find($produtoId);
         
         if(!$produto) {
-            return response()->json(['error' => 'Produto não encontrado!', 200]);
+            return response()->json(['error' => 'Produto não encontrado!'], 200);
         }
 
         $sacola = Sacola::firstOrCreate(

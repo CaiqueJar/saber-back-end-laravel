@@ -28,7 +28,49 @@ class RestauranteController extends Controller
      */
     public function index()
     {
-        return $this->restaurante->with('categoria')->get();
+        $diasSemana = [
+            'Sunday'    => 'domingo',
+            'Monday'    => 'segunda',
+            'Tuesday'   => 'terca',
+            'Wednesday' => 'quarta',
+            'Thursday'  => 'quinta',
+            'Friday'    => 'sexta',
+            'Saturday'  => 'sabado'
+        ];
+
+        $diaSemanaIngles = now()->format('l');
+        $diaSemanaAtual = $diasSemana[$diaSemanaIngles] ?? null;
+        
+        $horaAtual = now()->format('H:i:s');
+        
+        // Obter todos os restaurantes com seus relacionamentos
+        $restaurantes = $this->restaurante->with(['categoria', 'horarioFuncionamento'])->get();
+        
+        // Adicionar status e ordenar
+        $restaurantes = $restaurantes->map(function ($restaurante) use ($diaSemanaAtual, $horaAtual) {
+            $aberto = false;
+            
+            if( $restaurante->horarioFuncionamento) {
+                foreach ($restaurante->horarioFuncionamento as $horario) {
+                    if ($horario->dia_semana === $diaSemanaAtual && 
+                        $horario->hora_abertura <= $horaAtual && 
+                        $horario->hora_fechamento >= $horaAtual) {
+                        $aberto = true;
+                        break;
+                    }
+                }
+            }
+            
+            // Adicionar campo de status
+            $restaurante->status = $aberto ? 'aberto' : 'fechado';
+            return $restaurante;
+        })
+        ->sortBy(function ($restaurante) {
+            return $restaurante->status === 'aberto' ? 0 : 1;
+        })
+        ->values(); // Reindexar o array
+        
+        return $restaurantes;
     }
 
     public function getEndereco(string $id)
