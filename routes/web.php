@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -9,6 +10,8 @@ use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Order\OrderClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
+
+Route::get('/pdf/{id}', [InvoiceController::class, 'gerar']);
 
 Route::view('/', 'pagamento');
 

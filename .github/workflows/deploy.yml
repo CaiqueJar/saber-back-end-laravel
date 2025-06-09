@@ -23,15 +23,24 @@ jobs:
 
       - name: 🚀 Run deployment script on server
         run: |
-            ssh -p 65002 -i ~/.ssh/CaiqueJar u182216510@46.202.145.2 << 'EOF'
-              cd /home/u182216510/domains/mediumaquamarine-seahorse-148124.hostingersite.com/public_html
-              ssh-keyscan github.com >> ~/.ssh/known_hosts
-              git reset --hard HEAD
-              git clean -fd
-              git pull origin homolog
-              cp .env.homolog .env
-              php composer.phar install --no-interaction --prefer-dist --optimize-autoloader
-              php artisan migrate --force
-              php artisan config:clear
-              php artisan route:clear
-            EOF
+          ssh -p 65002 -i ~/.ssh/CaiqueJar u182216510@46.202.145.2 << 'EOF'
+            cd /home/u182216510/domains/mediumaquamarine-seahorse-148124.hostingersite.com/public_html
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            git reset --hard HEAD
+            git clean -fd
+            git pull origin homolog
+            cp .env.homolog .env
+
+            # Baixar e instalar o Composer
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            php composer-setup.php --install-dir=. --filename=composer.phar
+            php -r "unlink('composer-setup.php');"
+
+            # Instalar dependências
+            php composer.phar install --no-interaction --prefer-dist --optimize-autoloader
+
+            # Migrate e cache
+            php artisan migrate --force
+            php artisan config:clear
+            php artisan route:clear
+          EOF

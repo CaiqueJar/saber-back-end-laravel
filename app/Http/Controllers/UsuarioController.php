@@ -239,10 +239,10 @@ class UsuarioController extends Controller
     public function getPedido(string $id, string $pedidoId)
     {
         $usuario = Usuario::with([
-            'endereco',
             'pedidos' => function ($query) use ($pedidoId) {
                 $query->where('id', $pedidoId);
             },
+            'pedidos.enderecoEntrega',
             'pedidos.itens.produto',
             'pedidos.usuario'
         ])->find($id);
