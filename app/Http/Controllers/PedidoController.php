@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotaFiscalMail;
 use App\Models\EnderecoUsuario;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
@@ -9,6 +10,7 @@ use App\Models\Sacola;
 use App\Models\SacolaItem;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class PedidoController extends Controller
@@ -87,6 +89,9 @@ class PedidoController extends Controller
         // Limpa a sacola após criar o pedido
         SacolaItem::where('sacola_id', $sacola->id)->delete();
         $sacola->delete();
+
+        $usuario = Usuario::find($data['usuario_id']);
+        Mail::to($usuario->email)->send(new NotaFiscalMail($pedido));
 
         return response()->json([
             'message' => 'Pedido criado com sucesso',

@@ -11,7 +11,7 @@ use MercadoPago\Client\Order\OrderClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
 
-Route::get('/pdf/{id}', [InvoiceController::class, 'gerar']);
+Route::get('/pdf/{id}', [InvoiceController::class, 'gerar'])->name('pdf.download');
 
 Route::view('/', 'pagamento');
 
