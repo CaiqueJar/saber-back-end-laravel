@@ -78,6 +78,8 @@ Route::prefix('/restaurante')->controller(RestauranteController::class)->group(f
 
     Route::get('/{id}/pedidos', 'getPedidos');
 
+    Route::get('/usuarios/relatorio1', 'getUsuariosRelatorio');
+
 });
 
 /**

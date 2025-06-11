@@ -282,4 +282,15 @@ class RestauranteController extends Controller
 
         return response()->json($restaurante->pedidos, 200);
     }
+
+    public function getUsuariosRelatorio(Request $request)
+    {
+        $restauranteId = $request->input('restaurante_id');
+
+        $usuarios = Usuario::whereHas('pedidos', function ($query) use ($restauranteId) {
+                $query->where('restaurante_id', $restauranteId);
+            })->get();
+        
+        return response()->json($usuarios);
+    }
 }
