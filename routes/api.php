@@ -122,6 +122,8 @@ Route::prefix('/produto')->controller(ProdutoController::class)->group(function 
     Route::get('/list/restaurante/{restauranteId}', 'listByRestaurant');
     Route::get('/list/categoria/{categoriaId}', 'listByCategory');
     Route::put('/{id}/restore', 'restore');
+
+    Route::post('/atualizar/{id}', 'update');
 });
 
 
