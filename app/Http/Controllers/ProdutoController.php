@@ -110,6 +110,10 @@ class ProdutoController extends Controller
             
             $data['imagem'] = asset('storage/product-images/' . $imageName);
         }
+        else {
+            if(isset($data['imagem']))
+                unset($data['imagem']);
+        }
 
 
         $produto->update($data);
