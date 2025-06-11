@@ -272,9 +272,15 @@ class RestauranteController extends Controller
     public function getPedidos(string $id)
     {
         $restaurante = $this->restaurante
-            ->with(['endereco', 'pedidos.itens.produto', 'pedidos.usuario'])
-            ->find($id)
-            ->orderBy('pedidos.criado_em', 'desc');
+            ->with([
+                'endereco',
+                'pedidos' => function ($query) {
+                    $query->orderBy('criado_em', 'desc');
+                },
+                'pedidos.itens.produto',
+                'pedidos.usuario'
+            ])
+            ->find($id);
 
         if (!$restaurante) {
             return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 404);
