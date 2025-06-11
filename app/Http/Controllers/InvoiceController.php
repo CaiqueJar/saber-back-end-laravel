@@ -83,4 +83,68 @@ class InvoiceController extends Controller
 
         return $pdf->download('ranking-produtos.pdf');
     }
+
+    public function pedidosPorHoraPDF(Request $request)
+    {
+        $dtIni = $request->input('dt_ini');
+        $dtFin = $request->input('dt_fin');
+        $restauranteId = $request->input('restaurante_id');
+
+        $dados = DB::table('pedido')
+            ->select(DB::raw('HOUR(criado_em) as hora'), DB::raw('COUNT(*) as qtd'))
+            ->whereBetween('criado_em', [$dtIni, $dtFin])
+            ->where('restaurante_id', $restauranteId)
+            ->groupBy(DB::raw('HOUR(criado_em)'))
+            ->orderBy('hora')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'hora' => str_pad($item->hora, 2, '0', STR_PAD_LEFT) . ':00',
+                    'qtd' => $item->qtd
+                ];
+            });
+        
+        $labels = $dados->pluck('hora')->toArray();
+        $quantidades = $dados->pluck('qtd')->toArray();
+
+        $chartUrl = 'https://quickchart.io/chart?c=' . urlencode(json_encode([
+            'type' => 'bar',
+            'data' => [
+                'labels' => $labels,
+                'datasets' => [[
+                    'label' => 'Qtd Pedidos',
+                    'data' => $quantidades,
+                    'backgroundColor' => '#3490dc'
+                ]]
+            ],
+            'options' => [
+                'title' => [
+                    'display' => true,
+                    'text' => 'Quantidade de Pedidos por Hora'
+                ],
+                'scales' => [
+                    'yAxes' => [[
+                        'ticks' => [
+                            'beginAtZero' => true,
+                            'stepSize' => 1,
+                        ]
+                    ]]
+                ]
+            ]
+        ]));
+
+        $options = new \Dompdf\Options();
+        $options->set('isRemoteEnabled', true);
+        
+        $pdf = Pdf::loadView('pdf.pedidos_por_hora', [
+            'dtIni' => $dtIni,
+            'dtFin' => $dtFin,
+            'graficoUrl' => $chartUrl,
+            'dados' => $dados,
+        ])->setOptions([
+            'isRemoteEnabled' => true
+        ]);
+
+        return $pdf->download('relatorio-pedidos-por-hora.pdf');
+    }
 }

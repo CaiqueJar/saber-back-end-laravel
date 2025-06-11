@@ -14,6 +14,7 @@ use MercadoPago\MercadoPagoConfig;
 Route::get('/pdf/{id}', [InvoiceController::class, 'gerar'])->name('pdf.download');
 Route::get('/pdf/relatorio/1', [InvoiceController::class, 'relatorioFrequenciaCompras'])->name('pdf.relatorio.1');
 Route::get('/pdf/relatorio/2', [InvoiceController::class, 'rankingProdutosMaisVendidosPDF'])->name('pdf.relatorio.2');
+Route::get('/pdf/relatorio/3', [InvoiceController::class, 'pedidosPorHoraPDF'])->name('pdf.relatorio.3');
 
 Route::view('/', 'pagamento');
 
