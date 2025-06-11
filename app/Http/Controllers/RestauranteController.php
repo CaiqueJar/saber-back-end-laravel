@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RestauranteRequest;
 use App\Http\Requests\RestauranteUpdateRequest;
 use App\Models\EnderecoRestaurante;
+use App\Models\Pedido;
 use App\Models\Restaurante;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -268,7 +271,10 @@ class RestauranteController extends Controller
 
     public function getPedidos(string $id)
     {
-        $restaurante = $this->restaurante->with(['endereco', 'pedidos.itens.produto', 'pedidos.usuario'])->find($id);
+        $restaurante = $this->restaurante
+            ->with(['endereco', 'pedidos.itens.produto', 'pedidos.usuario'])
+            ->find($id)
+            ->orderBy('pedidos.criado_em', 'desc');
 
         if (!$restaurante) {
             return response()->json(['error' => 'Restaurante com id ' . $id . ' não encontrado'], 404);
