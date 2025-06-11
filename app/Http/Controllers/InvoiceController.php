@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pedido;
+use App\Models\PedidoItem;
 use App\Models\Usuario;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class InvoiceController extends Controller
         $cpf = $request->input('cpf');
         $mesIni = $request->input('mes_ini');
         $mesFin = $request->input('mes_fin');
+        $restauranteId = $request->input('restaurante_id');
 
         $usuario = Usuario::where('cpf', $cpf)->firstOrFail();
 
@@ -37,6 +39,7 @@ class InvoiceController extends Controller
                 DB::raw('COUNT(*) as qtd_pedidos')
             )
             ->where('usuario_id', $usuario->id)
+            ->where('restaurante_id', $restauranteId)
             ->whereBetween(DB::raw("DATE_FORMAT(criado_em, '%Y%m')"), [$mesIni, $mesFin])
             ->groupBy('mes')
             ->orderBy('mes')
@@ -54,5 +57,30 @@ class InvoiceController extends Controller
         ]);
 
         return $pdf->download('relatorio-frequencia-compras.pdf');
+    }
+
+
+    public function rankingProdutosMaisVendidosPDF(Request $request)
+    {
+        $dtIni = $request->input('dt_ini');
+        $dtFin = $request->input('dt_fin');
+        $restauranteId = $request->input('restaurante_id');
+
+        $ranking = PedidoItem::select('produto.nome as nome_produto', DB::raw('SUM(pedido_item.quantidade) as qtd_total'))
+            ->join('produto', 'pedido_item.produto_id', '=', 'produto.id')
+            ->join('pedido', 'pedido_item.pedido_id', '=', 'pedido.id')
+            ->where('pedido.restaurante_id', $restauranteId)
+            ->whereBetween('pedido.criado_em', [$dtIni, $dtFin])
+            ->groupBy('produto.nome')
+            ->orderByDesc('qtd_total')
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.ranking_produtos', [
+            'ranking' => $ranking,
+            'dtIni' => $dtIni,
+            'dtFin' => $dtFin,
+        ]);
+
+        return $pdf->download('ranking-produtos.pdf');
     }
 }
